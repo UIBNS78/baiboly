@@ -1,0 +1,51 @@
+div#history {
+  max-height: 600px;
+  overflow: auto;
+  /* overflow: scroll;
+  overflow-x: scroll;
+  overflow-x: hidden;*/
+  scrollbar-width: thin;
+}
+ul.history-box {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+div.history-item {
+  padding: 5px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  height: 50px;
+  gap: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 95%;
+}
+div.history-item:hover {
+  cursor: pointer;
+  background-color: var(--gray);
+  transition: all 0.5s;
+}
+div.history-item[data-isOpen="true"] {
+  height: 200px;
+}
+div.icon-box {
+  font-size: 25px;
+  color: orange;
+}
+small.content {
+  font-weight: lighter;
+  text-align: justify;
+}
+
+div.skeleton-box {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 20px;
+}
+div.skeleton-text-box {
+  width: 85%;
+}
