@@ -114,6 +114,18 @@ div.hide {
   background-color: white;
   height: 100%;
   color: var(--black);
+  padding: 50px 20px;
+  text-align: justify;
+}
+.verse-name {
+  text-align: center;
+  margin: 0;
+}
+.verse-text {
+  overflow: auto;
+  height: 80%;
+  padding: 0 30px;
+  scrollbar-width: thin;
 }
 .verse-number-content {
   margin-top: 30px;

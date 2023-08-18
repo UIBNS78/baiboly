@@ -158,15 +158,28 @@ function VerseComponent({ show, result, handleClose }) {
             transition={{ duration: 1.3 }}
             className="verse-text-box"
           >
-            <span>
-              {selected.name +
-                " " +
-                selected.verse +
-                " : " +
-                selected.from +
-                " - " +
-                selected.to}
-            </span>
+            <div>
+              <h2 className="verse-name">
+                {"selected.name" +
+                  " " +
+                  selected.verse +
+                  " : " +
+                  selected.from +
+                  " - " +
+                  selected.to}
+              </h2>
+            </div>
+            <div className="verse-text">
+              <p>
+                Consectetur magna consequat occaecat laborum proident commodo
+                nisi qui proident do ea adipisicing magna. Ex culpa excepteur
+                dolor dolor sit occaecat eu cillum enim. Officia consequat in
+                nulla officia laborum. Reprehenderit veniam adipisicing sit
+                tempor voluptate aliqua amet velit veniam magna adipisicing
+                dolor. Consectetur do ipsum occaecat cillum esse ut pariatur
+                laboris ullamco ullamco consequat. Veniam et nisi qui non.
+              </p>
+            </div>
           </motion.div>
         </div>
       </div>
