@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import { MenuComponent } from "../components/common/menu/menu-component";
 import RightComponent from "../components/home/right-content";
 import SearchComponent from "../components/home/left-content/search-component";
+import SnackbarComponent from "../components/common/snackbar/snackbar-component";
 
-export default class HomePage extends Component {
+class HomePage extends Component {
   render() {
     return (
       <>
@@ -21,7 +22,10 @@ export default class HomePage extends Component {
             <RightComponent />
           </div>
         </div>
+        <SnackbarComponent />
       </>
     );
   }
 }
+
+export default HomePage;

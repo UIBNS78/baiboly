@@ -1,0 +1,18 @@
+div.search-loading-box {
+  min-height: 350px;
+  max-height: 350px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+div.skeleton-box {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 20px;
+}
+div.skeleton-text-box {
+  width: 85%;
+}

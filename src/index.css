@@ -41,17 +41,17 @@ code {
   transition: all 0.3s;
   cursor: pointer;
 }
-.toko-number {
+.chapter-number {
   border-color: var(--orange);
 }
-.toko-number:hover {
+.chapter-number:hover {
   background-color: var(--orange);
   color: white;
 }
-.andininy-number {
+.verse-number {
   border-color: var(--cyan);
 }
-.andininy-number:hover {
+.verse-number:hover {
   background-color: var(--cyan);
   color: white;
 }

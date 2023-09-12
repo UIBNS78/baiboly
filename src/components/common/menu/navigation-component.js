@@ -35,13 +35,13 @@ const itemTop = [
   },
 ];
 
-const itemBottom = [
+/*const itemBottom = [
   {
     label: "Setting",
     route: "",
     icon: <CiSettings style={{ fontSize: "30px" }} />,
   },
-];
+];*/
 
 export const NavigationComponent = () => (
   <>

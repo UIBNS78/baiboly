@@ -1,50 +1,50 @@
 import React from "react";
 
 function VerseNumberComponent({ type, result, next }) {
-  const [andininy, setAndininy] = React.useState([]);
+  const [verse, setVerse] = React.useState([]);
   const [from, setFrom] = React.useState({ value: 0, selected: false });
   const [to, setTo] = React.useState({ value: 0, selected: false });
 
   React.useEffect(() => {
-    let newAndininy = [];
-    Array.from({ length: result.andininy }).forEach((a, i) => {
-      newAndininy.push({
+    let newVerse = [];
+    Array.from({ length: result.verse }).forEach((a, i) => {
+      newVerse.push({
         value: i + 1,
         selected: false,
       });
     });
-    setAndininy(newAndininy);
+    setVerse(newVerse);
   }, [result]);
 
-  const selectAndininy = (a) => {
+  const selectNumber = (a) => {
     //   change state selected
-    const newAndininy = andininy.map((and) => {
+    const newVerse = verse.map((and) => {
       if (and.value === a.value) {
         return { ...and, selected: to.value !== 0 ? true : !and.selected };
       }
       return and;
     });
-    setAndininy(newAndininy);
+    setVerse(newVerse);
 
     if (from.value !== 0) {
       if (to.value !== 0) {
-        andininy.forEach((an) => {
+        verse.forEach((an) => {
           an.selected = an.value === a.value;
         });
-        setAndininy(newAndininy);
+        setVerse(newVerse);
         setFrom(a);
         setTo({ value: 0, selected: false });
       } else {
         if (a.value < from.value) {
-          andininy.find((an) => an.value === a.value)["selected"] = false;
-          andininy.forEach((an) => {
+          verse.find((an) => an.value === a.value)["selected"] = false;
+          verse.forEach((an) => {
             if (an.value !== a.value) {
               an.selected = false;
             }
           });
           setFrom(a);
         } else {
-          andininy.forEach((an) => {
+          verse.forEach((an) => {
             if (an.value >= from.value && an.value <= a.value) {
               an.selected = true;
             }
@@ -60,32 +60,32 @@ function VerseNumberComponent({ type, result, next }) {
 
   return (() => {
     switch (type) {
-      case "toko":
+      case "chapter":
         return (
           <div className="d-flex jc-center ai-center gap-10 f-wrap">
-            {Array.from({ length: result.toko }).map((t, i) => (
+            {Array.from({ length: result.chapter }).map((t, i) => (
               <div
                 key={i}
-                className="verse-number toko-number"
-                onClick={() => next({ verse: i + 1 })}
+                className="verse-number chapter-number"
+                onClick={() => next({ chapter: i + 1 })}
               >
                 {i + 1}
               </div>
             ))}
           </div>
         );
-      case "andininy":
+      case "verse":
         return (
           <div className="d-flex jc-center ai-center gap-10 f-wrap">
-            {andininy &&
-              andininy.map((a, i) => (
+            {verse &&
+              verse.map((a, i) => (
                 <div
                   key={i}
                   className={
-                    "verse-number andininy-number " +
+                    "verse-number verse-number " +
                     (a.selected && "verse-selected")
                   }
-                  onClick={() => selectAndininy(a)}
+                  onClick={() => selectNumber(a)}
                 >
                   {a.value}
                 </div>

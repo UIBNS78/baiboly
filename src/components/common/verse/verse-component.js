@@ -4,14 +4,19 @@ import { AnimatePresence, motion } from "framer-motion";
 import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
 import { IoCloseOutline } from "react-icons/io5";
 import VerseNumberComponent from "./verseNumber-component";
+import "../../../style/verse-style.css";
+import { collection } from "firebase/firestore/lite";
+import database from "../../../config/firebase.config";
 
 function VerseComponent({ show, result, handleClose }) {
   // VAR
   const [selected, setSelected] = React.useState({
     name: "",
-    verse: "",
+    slug: "",
+    chapter: "",
     from: "",
     to: "",
+    content: [],
   });
 
   // STEP
@@ -20,7 +25,12 @@ function VerseComponent({ show, result, handleClose }) {
   const [completed] = React.useState({});
 
   React.useEffect(() => {
-    setSelected({ ...selected, name: result.name });
+    setSelected({
+      ...selected,
+      name: result.name,
+      slug: result.slug,
+      content: result.content,
+    });
   }, [result]);
 
   const totalSteps = () => {
@@ -58,12 +68,14 @@ function VerseComponent({ show, result, handleClose }) {
     let newValue = { ...selected };
     switch (activeStep) {
       case 0:
-        newValue.verse = value.verse;
+        newValue.chapter = value.chapter;
         handleNext();
         break;
       case 1:
         newValue.from = value.from;
         newValue.to = value.to;
+        // call service
+        getChapterAndVerse(newValue);
         break;
       default:
         break;
@@ -76,11 +88,20 @@ function VerseComponent({ show, result, handleClose }) {
     setActiveStep(0);
     setSelected({
       name: "",
-      verse: "",
+      slug: "",
+      chapter: "",
       from: "",
       to: "",
     });
     handleClose();
+  };
+
+  const getChapterAndVerse = (value) => {
+    const content = value.content.find((vc) => vc.chapter === value.chapter);
+    if (content) {
+      const a = content.verse.slice(value.from - 1, value.to);
+    }
+    // const nameCollection = collection(database, name)
   };
 
   return (
@@ -126,7 +147,7 @@ function VerseComponent({ show, result, handleClose }) {
                     transition={{ duration: 0.2 }}
                   >
                     <VerseNumberComponent
-                      type={activeStep === 0 ? "toko" : "andininy"}
+                      type={activeStep === 0 ? "chapter" : "verse"}
                       result={result}
                       next={next}
                     />
@@ -160,25 +181,30 @@ function VerseComponent({ show, result, handleClose }) {
           >
             <div>
               <h2 className="verse-name">
-                {"selected.name" +
-                  " " +
-                  selected.verse +
-                  " : " +
-                  selected.from +
-                  " - " +
-                  selected.to}
+                {`${selected.name} ${selected.chapter} ${
+                  selected.from && " : " + selected.from
+                } ${selected.to && " - " + selected.to}`}
               </h2>
             </div>
             <div className="verse-text">
-              <p>
-                Consectetur magna consequat occaecat laborum proident commodo
-                nisi qui proident do ea adipisicing magna. Ex culpa excepteur
-                dolor dolor sit occaecat eu cillum enim. Officia consequat in
-                nulla officia laborum. Reprehenderit veniam adipisicing sit
-                tempor voluptate aliqua amet velit veniam magna adipisicing
-                dolor. Consectetur do ipsum occaecat cillum esse ut pariatur
-                laboris ullamco ullamco consequat. Veniam et nisi qui non.
-              </p>
+              {selected.content &&
+                selected.content.map((content, contentIndex) => (
+                  <p key={contentIndex}>
+                    <span className="chapter-number-in-text">
+                      {content.chapter}{" "}
+                    </span>
+                    {content.verse &&
+                      content.verse.map((verse, verseIndex) => (
+                        <span key={verseIndex}>
+                          <span className="verse-number-in-text">
+                            {" "}
+                            {verseIndex + 1} -{" "}
+                          </span>
+                          {verse}
+                        </span>
+                      ))}
+                  </p>
+                ))}
             </div>
           </motion.div>
         </div>

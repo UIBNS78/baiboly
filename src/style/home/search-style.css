@@ -42,6 +42,12 @@ div.item {
   border-radius: 30px;
   width: 150px;
   height: 100px;
+  color: var(--black);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  cursor: pointer;
 }
 div.result-backdrop {
   background-color: rgba(0, 0, 0, 0.8);
