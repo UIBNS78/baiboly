@@ -5,3 +5,9 @@
   font-size: 12px;
   color: var(--orange);
 }
+.verse-title-box {
+  margin-bottom: 10px;
+}
+.verse-text-paragraph {
+  margin: 0;
+}

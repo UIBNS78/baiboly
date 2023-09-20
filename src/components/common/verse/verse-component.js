@@ -5,8 +5,7 @@ import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
 import { IoCloseOutline } from "react-icons/io5";
 import VerseNumberComponent from "./verseNumber-component";
 import "../../../style/verse-style.css";
-import { collection } from "firebase/firestore/lite";
-import database from "../../../config/firebase.config";
+import ContentComponent from "./content-component";
 
 function VerseComponent({ show, result, handleClose }) {
   // VAR
@@ -16,6 +15,7 @@ function VerseComponent({ show, result, handleClose }) {
     chapter: "",
     from: "",
     to: "",
+    number: 0,
     content: [],
   });
 
@@ -29,6 +29,7 @@ function VerseComponent({ show, result, handleClose }) {
       ...selected,
       name: result.name,
       slug: result.slug,
+      number: result.totalChapter,
       content: result.content,
     });
   }, [result]);
@@ -61,21 +62,24 @@ function VerseComponent({ show, result, handleClose }) {
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    setSelected({ ...selected, verse: "", from: "", to: "" });
+    setSelected({
+      ...selected,
+      number: result.totalChapter,
+      content: result.content,
+      from: "",
+      to: "",
+    });
   };
 
   const next = (value) => {
     let newValue = { ...selected };
     switch (activeStep) {
       case 0:
-        newValue.chapter = value.chapter;
+        newValue = selectChapter(newValue, value);
         handleNext();
         break;
       case 1:
-        newValue.from = value.from;
-        newValue.to = value.to;
-        // call service
-        getChapterAndVerse(newValue);
+        newValue = getVerseContent(newValue, value);
         break;
       default:
         break;
@@ -96,11 +100,45 @@ function VerseComponent({ show, result, handleClose }) {
     handleClose();
   };
 
-  const getChapterAndVerse = (value) => {
-    const content = value.content.find((vc) => vc.chapter === value.chapter);
-    if (content) {
-      const a = content.verse.slice(value.from - 1, value.to);
+  const selectChapter = (newValue, value) => {
+    newValue.chapter = value.chapter;
+    const correctVerse = selected.content.find(
+      (c) => c.chapter === value.chapter
+    );
+    if (correctVerse) {
+      newValue.content = [correctVerse];
+      newValue.number = correctVerse.verse.length;
     }
+    return newValue;
+  };
+
+  const getVerseContent = (newValue, value) => {
+    const { from, to } = value;
+    const { chapter, content } = newValue;
+    const contentVerse = result.content.find(
+      (c) => c.chapter === chapter
+    ).verse;
+    let verse = [];
+    if (to !== 0) {
+      verse =
+        to === contentVerse.length
+          ? contentVerse.slice(from - 1)
+          : contentVerse.slice(from - 1, to);
+    } else {
+      verse = contentVerse.slice(from - 1);
+    }
+    return {
+      ...newValue,
+      from: value.from,
+      to: value.to,
+      content: [
+        {
+          chapter,
+          totalVerse: content[0].totalVerse,
+          verse,
+        },
+      ],
+    };
     // const nameCollection = collection(database, name)
   };
 
@@ -148,7 +186,7 @@ function VerseComponent({ show, result, handleClose }) {
                   >
                     <VerseNumberComponent
                       type={activeStep === 0 ? "chapter" : "verse"}
-                      result={result}
+                      number={selected.number}
                       next={next}
                     />
                   </motion.div>
@@ -171,42 +209,7 @@ function VerseComponent({ show, result, handleClose }) {
           </motion.div>
         </div>
         <div className="verse-right-box">
-          <motion.div
-            key={2}
-            initial={{ x: 50, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -50, opacity: 0 }}
-            transition={{ duration: 1.3 }}
-            className="verse-text-box"
-          >
-            <div>
-              <h2 className="verse-name">
-                {`${selected.name} ${selected.chapter} ${
-                  selected.from && " : " + selected.from
-                } ${selected.to && " - " + selected.to}`}
-              </h2>
-            </div>
-            <div className="verse-text">
-              {selected.content &&
-                selected.content.map((content, contentIndex) => (
-                  <p key={contentIndex}>
-                    <span className="chapter-number-in-text">
-                      {content.chapter}{" "}
-                    </span>
-                    {content.verse &&
-                      content.verse.map((verse, verseIndex) => (
-                        <span key={verseIndex}>
-                          <span className="verse-number-in-text">
-                            {" "}
-                            {verseIndex + 1} -{" "}
-                          </span>
-                          {verse}
-                        </span>
-                      ))}
-                  </p>
-                ))}
-            </div>
-          </motion.div>
+          <ContentComponent selected={selected}></ContentComponent>
         </div>
       </div>
     </Backdrop>

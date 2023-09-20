@@ -37,17 +37,38 @@ div.item-search-box {
   padding: 10px;
   flex-wrap: wrap;
 }
+
+.filter-box {
+  color: var(--black);
+  font-size: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.filter-btn {
+  background-color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.filter-btn:hover {
+  background-color: white;
+}
+
 div.item {
   background: white;
   border-radius: 30px;
-  width: 150px;
-  height: 100px;
+  width: 200px;
+  height: 120px;
   color: var(--black);
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 20px;
   cursor: pointer;
+  text-align: center;
 }
 div.result-backdrop {
   background-color: rgba(0, 0, 0, 0.8);
@@ -120,7 +141,7 @@ div.hide {
   background-color: white;
   height: 100%;
   color: var(--black);
-  padding: 50px 20px;
+  padding: 20px;
   text-align: justify;
 }
 .verse-name {
@@ -129,7 +150,7 @@ div.hide {
 }
 .verse-text {
   overflow: auto;
-  height: 80%;
+  height: 90vh;
   padding: 0 30px;
   scrollbar-width: thin;
 }

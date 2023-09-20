@@ -1,20 +1,20 @@
 import React from "react";
 
-function VerseNumberComponent({ type, result, next }) {
+function VerseNumberComponent({ type, number, next }) {
   const [verse, setVerse] = React.useState([]);
   const [from, setFrom] = React.useState({ value: 0, selected: false });
   const [to, setTo] = React.useState({ value: 0, selected: false });
 
   React.useEffect(() => {
     let newVerse = [];
-    Array.from({ length: result.verse }).forEach((a, i) => {
+    Array.from({ length: number }).forEach((a, i) => {
       newVerse.push({
         value: i + 1,
         selected: false,
       });
     });
     setVerse(newVerse);
-  }, [result]);
+  }, []);
 
   const selectNumber = (a) => {
     //   change state selected
@@ -26,6 +26,7 @@ function VerseNumberComponent({ type, result, next }) {
     });
     setVerse(newVerse);
 
+    // set from and to
     if (from.value !== 0) {
       if (to.value !== 0) {
         verse.forEach((an) => {
@@ -34,6 +35,7 @@ function VerseNumberComponent({ type, result, next }) {
         setVerse(newVerse);
         setFrom(a);
         setTo({ value: 0, selected: false });
+        next({ from: a.value, to: 0 });
       } else {
         if (a.value < from.value) {
           verse.find((an) => an.value === a.value)["selected"] = false;
@@ -43,6 +45,7 @@ function VerseNumberComponent({ type, result, next }) {
             }
           });
           setFrom(a);
+          next({ from: a.value, to: 0 });
         } else {
           verse.forEach((an) => {
             if (an.value >= from.value && an.value <= a.value) {
@@ -55,6 +58,7 @@ function VerseNumberComponent({ type, result, next }) {
       }
     } else {
       setFrom(a);
+      next({ from: a.value, to: 0 });
     }
   };
 
@@ -63,7 +67,7 @@ function VerseNumberComponent({ type, result, next }) {
       case "chapter":
         return (
           <div className="d-flex jc-center ai-center gap-10 f-wrap">
-            {Array.from({ length: result.chapter }).map((t, i) => (
+            {Array.from({ length: number }).map((t, i) => (
               <div
                 key={i}
                 className="verse-number chapter-number"

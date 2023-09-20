@@ -38,3 +38,7 @@ small.content {
   font-weight: lighter;
   text-align: justify;
 }
+.tab-icon-name {
+  display: flex;
+  font-size: 25px;
+}

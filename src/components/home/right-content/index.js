@@ -27,7 +27,7 @@ export class RightComponent extends Component {
                 onClick={() => this.setState({ selectedTab: t })}
               >
                 <div className="tab-item-name">
-                  <span>{t.icon}</span>
+                  <div className="tab-icon-name">{t.icon}</div>
                   <span>{t.label}</span>
                 </div>
                 {selectedTab === t ? (

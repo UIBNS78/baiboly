@@ -1,7 +1,7 @@
 import { collection, getDocs } from "firebase/firestore/lite";
 import { motion } from "framer-motion";
 import React from "react";
-import { CiSearch } from "react-icons/ci";
+import { CiSearch, CiSliderHorizontal } from "react-icons/ci";
 import database from "../../../config/firebase.config";
 import { collections, area, severity } from "../../../common/constante";
 import "../../../style/home/search-style.css";
@@ -17,6 +17,7 @@ function SearchComponent() {
   const dispatch = useDispatch();
 
   const [bible, setBible] = React.useState([]);
+  const [boxes, setBoxes] = React.useState([]);
   const [showResult, setShowResult] = React.useState(false);
   const [result, setResult] = React.useState({});
   const name_promiseInProgress = usePromiseTracker({
@@ -43,8 +44,8 @@ function SearchComponent() {
           setResult({
             name: nameSelected.name,
             slug: nameSelected.slug,
-            chapter: snapshot.size,
-            verse: verses.total,
+            totalChapter: snapshot.size,
+            totalVerse: verses.total,
             content: verses.content,
           });
         })
@@ -71,6 +72,7 @@ function SearchComponent() {
           const docs = [];
           snapshot.forEach((doc) => docs.push({ ...doc.data(), id: doc.id }));
           setBible(docs);
+          setBoxes(docs);
         })
         .catch((reason) => {
           const snackbar = {
@@ -87,16 +89,16 @@ function SearchComponent() {
   const searchDirectly = (event) => {
     const { value } = event.target;
     if (value) {
-      const bb = bible.filter((b) => b.name.includes(value));
-      setBible(bb);
+      const bb = bible.filter((b) => b.name.toLowerCase().includes(value));
+      setBoxes(bb);
     } else {
-      getBible();
+      setBoxes(bible);
     }
   };
 
   return (
     <>
-      <div className="d-flex jc-center">
+      <div className="d-flex jc-center gap-15">
         <div className="input-outside">
           <div className="icon-search">
             <CiSearch />
@@ -110,10 +112,15 @@ function SearchComponent() {
             onKeyUp={searchDirectly}
           />
         </div>
+        <div className="filter-box">
+          <div className="filter-btn">
+            <CiSliderHorizontal />
+          </div>
+        </div>
       </div>
       <div className="item-search-box">
         {!search_promiseInProgress &&
-          bible.map((bb) => (
+          boxes.map((bb) => (
             <motion.div
               key={bb.id}
               whileHover={{ scale: 1.1 }}
