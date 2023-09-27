@@ -1,0 +1,21 @@
+div.fav-list-item {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
+  padding: 10px;
+}
+div.icon-fav-list {
+  display: flex;
+  font-size: 25px;
+  color: var(--red);
+}
+div.fav-list-name {
+  font-size: 15px;
+  font-weight: bold;
+}
+span.fav-list-text {
+  display: block;
+  font-size: 12px;
+  color: var(--gray);
+}

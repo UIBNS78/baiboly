@@ -1,9 +1,11 @@
 body {
   --blue: #1c92d2;
-  --gray: #eeeeee66;
+  --light-gray: #eeeeee66;
+  --gray: #bdc3c7;
   --black: #222222;
   --orange: #f79f1f;
   --cyan: #18dcff;
+  --red: #ff4d4d;
   margin: 0;
   font-family: "Poppins", sans-serif;
   -webkit-font-smoothing: antialiased;

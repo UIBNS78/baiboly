@@ -24,7 +24,7 @@ div.history-item {
 }
 div.history-item:hover {
   cursor: pointer;
-  background-color: var(--gray);
+  background-color: var(--light-gray);
   transition: all 0.5s;
 }
 div.history-item[data-isOpen="true"] {

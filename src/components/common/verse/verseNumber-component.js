@@ -14,7 +14,7 @@ function VerseNumberComponent({ type, number, next }) {
       });
     });
     setVerse(newVerse);
-  }, []);
+  }, [number]);
 
   const selectNumber = (a) => {
     //   change state selected

@@ -7,7 +7,53 @@
 }
 .verse-title-box {
   margin-bottom: 10px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.verse-name-box {
+  width: 100%;
+}
+.verse-text-copy:hover {
+  opacity: 0.6;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.favorite-btn {
+  display: flex;
+  font-size: 25px;
+  padding: 5px;
+  cursor: pointer;
 }
 .verse-text-paragraph {
   margin: 0;
+}
+.favorite-btn {
+  /* background-color: red; */
+  font-size: 30px;
+}
+.favorite-red {
+  color: var(--red);
+}
+
+/* content */
+.setting-text-box {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.slider-box {
+  width: 200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.a {
+  font-size: 10px;
+}
+.A {
+  font-size: 15px;
 }

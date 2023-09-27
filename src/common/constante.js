@@ -2,6 +2,7 @@ export const collections = {
   USERS: "users",
   BIBLE: "bible",
   HISTORY: "history",
+  FAVORITE: "favorite",
 };
 
 export const area = {
@@ -15,4 +16,8 @@ export const severity = {
   WARNING: "warning",
   INFO: "info",
   SUCCESS: "success",
+};
+
+export const messages = {
+  copy: "Verset copié dans le presse papier.",
 };

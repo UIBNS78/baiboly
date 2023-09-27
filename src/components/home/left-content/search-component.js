@@ -12,6 +12,17 @@ import LoadingSelectedComponent from "../../common/loading/loadingSelected-compo
 import { useDispatch } from "react-redux";
 import { handleSnackbar } from "../../../redux/reducers/index-reducer";
 import { getAllVerse } from "../../../common/methods";
+import { Tooltip } from "@mui/material";
+
+const filter = [
+  { mode: 1, name: "nom", placeholder: "(e.g: Salamo)" },
+  { mode: 2, name: "texte", placeholder: "(e.g: niakatra avy tany Ejipta)" },
+  {
+    mode: 3,
+    name: "texte + chapter + verse",
+    placeholder: "(e.g: Salamo 2 : 13 - 14)",
+  },
+];
 
 function SearchComponent() {
   const dispatch = useDispatch();
@@ -20,6 +31,8 @@ function SearchComponent() {
   const [boxes, setBoxes] = React.useState([]);
   const [showResult, setShowResult] = React.useState(false);
   const [result, setResult] = React.useState({});
+  const [filterMode, setFilterMode] = React.useState(filter[0]);
+
   const name_promiseInProgress = usePromiseTracker({
     area: area.name,
   }).promiseInProgress;
@@ -28,8 +41,26 @@ function SearchComponent() {
   }).promiseInProgress;
 
   React.useEffect(() => {
-    getBible();
-  }, []);
+    const bibleCollection = collection(database, collections.BIBLE);
+    trackPromise(
+      getDocs(bibleCollection)
+        .then((snapshot) => {
+          const docs = [];
+          snapshot.forEach((doc) => docs.push({ ...doc.data(), id: doc.id }));
+          setBible(docs);
+          setBoxes(docs);
+        })
+        .catch((reason) => {
+          const snackbar = {
+            open: true,
+            message: reason.message,
+            severity: severity.ERROR,
+          };
+          dispatch(handleSnackbar({ snackbar }));
+        }),
+      area.search
+    );
+  }, [dispatch]);
 
   const handleShowResult = (nameSelected) => {
     const nameCollection = collection(database, nameSelected.slug);
@@ -42,6 +73,7 @@ function SearchComponent() {
           });
           const verses = getAllVerse(name);
           setResult({
+            bibleRef: verses.bibleRef,
             name: nameSelected.name,
             slug: nameSelected.slug,
             totalChapter: snapshot.size,
@@ -64,28 +96,6 @@ function SearchComponent() {
     );
   };
 
-  const getBible = () => {
-    const bibleCollection = collection(database, collections.BIBLE);
-    trackPromise(
-      getDocs(bibleCollection)
-        .then((snapshot) => {
-          const docs = [];
-          snapshot.forEach((doc) => docs.push({ ...doc.data(), id: doc.id }));
-          setBible(docs);
-          setBoxes(docs);
-        })
-        .catch((reason) => {
-          const snackbar = {
-            open: true,
-            message: reason.message,
-            severity: severity.ERROR,
-          };
-          dispatch(handleSnackbar({ snackbar }));
-        }),
-      area.search
-    );
-  };
-
   const searchDirectly = (event) => {
     const { value } = event.target;
     if (value) {
@@ -94,6 +104,17 @@ function SearchComponent() {
     } else {
       setBoxes(bible);
     }
+  };
+
+  const handleFilterMode = () => {
+    const currentIndex = filter.indexOf(filterMode);
+    const index =
+      currentIndex !== -1
+        ? currentIndex < filter.length - 1
+          ? currentIndex + 1
+          : 0
+        : 0;
+    setFilterMode(filter[index]);
   };
 
   return (
@@ -106,16 +127,18 @@ function SearchComponent() {
           <input
             type="text"
             className="input-search"
-            placeholder="Search here... (e.g: Salamo 2 13 14) "
+            placeholder={`Search here... ${filterMode.placeholder}`}
             autoComplete="off"
             autoFocus
             onKeyUp={searchDirectly}
           />
         </div>
         <div className="filter-box">
-          <div className="filter-btn">
-            <CiSliderHorizontal />
-          </div>
+          <Tooltip title={`Mode : ${filterMode.name}`} placement="top" arrow>
+            <div className="filter-btn" onClick={handleFilterMode}>
+              <CiSliderHorizontal />
+            </div>
+          </Tooltip>
         </div>
       </div>
       <div className="item-search-box">
@@ -137,11 +160,13 @@ function SearchComponent() {
           ))}
       </div>
       <LoadingSearchComponent area={area.search} />
-      <VerseComponent
-        show={showResult}
-        result={result}
-        handleClose={setShowResult}
-      />
+      <div id="verse-component">
+        <VerseComponent
+          show={showResult}
+          result={result}
+          handleClose={setShowResult}
+        />
+      </div>
     </>
   );
 }

@@ -150,9 +150,10 @@ div.hide {
 }
 .verse-text {
   overflow: auto;
-  height: 90vh;
+  height: 85vh;
   padding: 0 30px;
   scrollbar-width: thin;
+  transition: all 1s;
 }
 .verse-number-content {
   margin-top: 30px;

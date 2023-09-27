@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import React from "react";
 import { CiTextAlignLeft } from "react-icons/ci";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Skeleton } from "@mui/material";
 import "../../../style/home/history-style.css";
 import LoadingHistoryComponent from "../../common/loading/loadingHistory-component";
 import { area, collections, severity } from "../../../common/constante";
@@ -15,7 +14,7 @@ import { handleSnackbar } from "../../../redux/reducers/index-reducer";
 function HistoryComponenet() {
   const dispatch = useDispatch();
 
-  const [hasMoreHistory, setHasMoreHistory] = React.useState(true);
+  const [hasMoreHistory] = React.useState(true);
   const [history, setHistory] = React.useState([]);
 
   const { promiseInProgress } = usePromiseTracker({ area: area.history });
@@ -31,10 +30,6 @@ function HistoryComponenet() {
   };
 
   React.useEffect(() => {
-    getHistory();
-  }, []);
-
-  const getHistory = () => {
     const historyCollection = collection(database, collections.HISTORY);
     trackPromise(
       getDocs(historyCollection)
@@ -60,40 +55,7 @@ function HistoryComponenet() {
         }),
       area.history
     );
-  };
-
-  const fetchMoreHistory = () => {
-    if (history.length <= 15) {
-      setTimeout(() => {
-        setHistory([
-          ...history,
-          {
-            id: Math.random(),
-            name: "Petera",
-            in: 3,
-            from: 5,
-            to: 6,
-            content: "yo oy yo ooyouoouo ou ",
-            isOpen: false,
-          },
-        ]);
-      }, 2000);
-    } else {
-      setHasMoreHistory(false);
-    }
-  };
-
-  const ItemSkeleton = () => {
-    return Array.from({ length: 5 }).map((s, i) => (
-      <div key={i} className="skeleton-box">
-        <Skeleton variant="circular" width={40} height={40} />
-        <div className="skeleton-text-box">
-          <Skeleton width={50} height={15} />
-          <Skeleton width={"100%"} height={15} />
-        </div>
-      </div>
-    ));
-  };
+  }, [dispatch]);
 
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);

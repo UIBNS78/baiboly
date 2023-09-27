@@ -6,10 +6,21 @@ import { IoCloseOutline } from "react-icons/io5";
 import VerseNumberComponent from "./verseNumber-component";
 import "../../../style/verse-style.css";
 import ContentComponent from "./content-component";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore/lite";
+import database from "../../../config/firebase.config";
+import { collections } from "../../../common/constante";
 
 function VerseComponent({ show, result, handleClose }) {
   // VAR
   const [selected, setSelected] = React.useState({
+    bibleRef: "",
     name: "",
     slug: "",
     chapter: "",
@@ -18,6 +29,7 @@ function VerseComponent({ show, result, handleClose }) {
     number: 0,
     content: [],
   });
+  const [favorites, setFavorites] = React.useState([]);
 
   // STEP
   const steps = ["Toko", "Andininy"];
@@ -27,6 +39,7 @@ function VerseComponent({ show, result, handleClose }) {
   React.useEffect(() => {
     setSelected({
       ...selected,
+      bibleRef: result.bibleRef,
       name: result.name,
       slug: result.slug,
       number: result.totalChapter,
@@ -97,6 +110,7 @@ function VerseComponent({ show, result, handleClose }) {
       from: "",
       to: "",
     });
+    setFavorites([]);
     handleClose();
   };
 
@@ -112,12 +126,32 @@ function VerseComponent({ show, result, handleClose }) {
     return newValue;
   };
 
+  const getFavoriteByChapterRef = (collectionName, chapterId) => {
+    const favoriteCollection = collection(database, collections.FAVORITE);
+    const chapterRef = doc(database, collectionName, chapterId);
+    const queryRef = query(
+      favoriteCollection,
+      where("chapterRef", "==", chapterRef)
+    );
+    getDocs(queryRef).then((snapshot) => {
+      const favs = [];
+      snapshot.forEach((f) => {
+        let newFav = { ...f.data(), id: f.id };
+        getDoc(newFav.bible)
+          .then((b) => {
+            newFav.bible = b.exists() ? b.data() : null;
+            favs.push(newFav);
+          })
+          .finally(() => setFavorites(favs));
+      });
+    });
+  };
+
   const getVerseContent = (newValue, value) => {
     const { from, to } = value;
     const { chapter, content } = newValue;
-    const contentVerse = result.content.find(
-      (c) => c.chapter === chapter
-    ).verse;
+    const correctVerse = result.content.find((c) => c.chapter === chapter);
+    const contentVerse = correctVerse.verse;
     let verse = [];
     if (to !== 0) {
       verse =
@@ -127,6 +161,9 @@ function VerseComponent({ show, result, handleClose }) {
     } else {
       verse = contentVerse.slice(from - 1);
     }
+    // get Favorite by chapter selected
+    getFavoriteByChapterRef(newValue.slug, correctVerse.id);
+
     return {
       ...newValue,
       from: value.from,
@@ -209,7 +246,10 @@ function VerseComponent({ show, result, handleClose }) {
           </motion.div>
         </div>
         <div className="verse-right-box">
-          <ContentComponent selected={selected}></ContentComponent>
+          <ContentComponent
+            selected={selected}
+            favorites={favorites}
+          ></ContentComponent>
         </div>
       </div>
     </Backdrop>
